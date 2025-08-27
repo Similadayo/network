@@ -29,10 +29,11 @@ func Calcualte(cidr string) (string, error) {
 	broadcast := iputils.Broadcast(netw)
 	firstUseable := iputils.IncrementIP(netw.IP, 1)
 	lastUsable := iputils.IncrementIP(broadcast, ^uint64(0))
+	maskedStr := iputils.MaskToString(masklen)
 
 	usableRange := fmt.Sprintf("%s - %s", firstUseable, lastUsable)
-	result := fmt.Sprintf("Network: %s\nNetmask: %s\nBroadcast: %s\nUsable Hosts: %d\nUsable Range: %s",
-		netw.IP, netw.Mask, broadcast, usableHosts, usableRange)
+	result := fmt.Sprintf("Subnet: %s (Host Bits: %d, Usable Hosts: %d, Range: %s, Network: %s, Broadcast: %s, Mask: %s)",
+		netw.IP, masklen, usableHosts, usableRange, netw.IP, broadcast, maskedStr)
 
 	return result, nil
 }
