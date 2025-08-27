@@ -21,10 +21,7 @@ func Calcualte(cidr string) (string, error) {
 
 	masklen, _ := netw.Mask.Size()
 	hostbits := 32 - masklen
-	usableHosts := int(math.Pow(2, float64(hostbits))) - 2
-	if usableHosts < 0 {
-		usableHosts = 0
-	}
+	usableHosts := max(int(math.Pow(2, float64(hostbits)))-2, 0)
 
 	broadcast := iputils.Broadcast(netw)
 	firstUseable := iputils.IncrementIP(netw.IP, 1)
@@ -33,7 +30,7 @@ func Calcualte(cidr string) (string, error) {
 
 	usableRange := fmt.Sprintf("%s - %s", firstUseable, lastUsable)
 	result := fmt.Sprintf("Subnet: %s (Host Bits: %d, Usable Hosts: %d, Range: %s, Network: %s, Broadcast: %s, Mask: %s)",
-		netw.IP, masklen, usableHosts, usableRange, netw.IP, broadcast, maskedStr)
+		netw.IP, hostbits, usableHosts, usableRange, netw.IP, broadcast, maskedStr)
 
 	return result, nil
 }
