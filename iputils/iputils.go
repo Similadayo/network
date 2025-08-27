@@ -18,7 +18,7 @@ func Broadcast(ipnet *net.IPNet) net.IP {
 }
 
 // IncrementIP increments an IP address by a given value.
-func IncrementIP(ip net.IP, increment int) net.IP {
+func IncrementIP(ip net.IP, increment uint64) net.IP {
 	ip = ip.To4()
 	if ip == nil {
 		return nil // Not an IPv4 address
