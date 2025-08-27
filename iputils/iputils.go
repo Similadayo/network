@@ -1,6 +1,9 @@
 package iputils
 
-import "net"
+import (
+	"fmt"
+	"net"
+)
 
 // Broadcast calculates the broadcast address for a given IP network.
 func Broadcast(ipnet *net.IPNet) net.IP {
@@ -32,4 +35,17 @@ func IncrementIP(ip net.IP, increment uint64) net.IP {
 	newIP[2] = byte((val >> 8) & 0xFF)
 	newIP[3] = byte(val & 0xFF)
 	return newIP
+}
+
+// MaskToString converts a CIDR prefix length to a subnet mask string (e.g., /24 -> 255.255.255.0).
+func MaskToString(prefix int) string {
+	if prefix < 0 || prefix > 32 {
+		return "invalid"
+	}
+	var mask uint32 = 0xFFFFFFFF << (32 - prefix)
+	return fmt.Sprintf("%d.%d.%d.%d",
+		byte((mask>>24)&0xFF),
+		byte((mask>>16)&0xFF),
+		byte((mask>>8)&0xFF),
+		byte(mask&0xFF))
 }
